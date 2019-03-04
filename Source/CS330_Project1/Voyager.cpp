@@ -17,10 +17,10 @@ AVoyager::AVoyager()
 	SphereComponent->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Use a spring arm to give the camera smooth, natural-feeling motion.
-	USpringArmComponent* SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraAttachmentArm"));
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraAttachmentArm"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->RelativeRotation = FRotator(-45.f, 0.f, 0.f);
-	SpringArm->TargetArmLength = 400.0f;
+	SpringArm->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f));
+	SpringArm->TargetArmLength = 0.0f;
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->CameraLagSpeed = 3.0f;
 	// Create a camera and attach to our spring arm
@@ -47,6 +47,21 @@ void AVoyager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Rotate our camera's yaw
+	{
+		FRotator NewRotation = SpringArm->GetComponentRotation();
+		NewRotation.Yaw += CameraInput.X;
+		SpringArm->SetWorldRotation(NewRotation);
+	}
+
+	//Rotate our camera's pitch, but limit it so we're always looking downward
+	//NOTE: Camera's pitch is changing independent of actor's pitch
+	{
+		FRotator NewRotation = SpringArm->GetComponentRotation();
+		NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + CameraInput.Y, -80.0f, 80.0f);
+		SpringArm->SetWorldRotation(NewRotation);
+	}
+
 }
 
 // Called to bind functionality to input
@@ -57,6 +72,7 @@ void AVoyager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAxis("MoveForward", this, &AVoyager::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AVoyager::MoveRight);
 	InputComponent->BindAxis("Turn", this, &AVoyager::Turn);
+	InputComponent->BindAxis("TurnUp", this, &AVoyager::TurnUp);
 
 }
 
@@ -69,7 +85,7 @@ void AVoyager::MoveForward(float AxisValue)
 {
 	if (OurMovementComponent && (OurMovementComponent->UpdatedComponent == RootComponent))
 	{
-		OurMovementComponent->AddInputVector(GetActorForwardVector() * AxisValue);
+		OurMovementComponent->AddInputVector(SpringArm->GetForwardVector()* AxisValue);
 	}
 }
 
@@ -77,13 +93,16 @@ void AVoyager::MoveRight(float AxisValue)
 {
 	if (OurMovementComponent && (OurMovementComponent->UpdatedComponent == RootComponent))
 	{
-		OurMovementComponent->AddInputVector(GetActorRightVector() * AxisValue);
+		OurMovementComponent->AddInputVector(SpringArm->GetRightVector() * AxisValue);
 	}
 }
 
 void AVoyager::Turn(float AxisValue)
 {
-	FRotator NewRotation = GetActorRotation();
-	NewRotation.Yaw += AxisValue;
-	SetActorRotation(NewRotation);
+	CameraInput.X = AxisValue;
+}
+
+void AVoyager::TurnUp(float AxisValue)
+{
+	CameraInput.Y = AxisValue;
 }

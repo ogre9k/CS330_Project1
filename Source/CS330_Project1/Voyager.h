@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "VoyagerMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Voyager.generated.h"
 
 UCLASS()
@@ -21,7 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	class UVoyagerMovementComponent* OurMovementComponent;
-
+	USpringArmComponent* SpringArm;
+	FVector2D CameraInput;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,6 +37,6 @@ public:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 	void Turn(float AxisValue);
-	void ParticleToggle();
+	void TurnUp(float AxisValue);
 
 };
