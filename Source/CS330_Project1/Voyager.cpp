@@ -28,7 +28,7 @@ AVoyager::AVoyager()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 
 	// Create an instance of our movement component, and tell it to update the root.
-	OurMovementComponent = CreateDefaultSubobject<UVoyagerMovementComponent>(TEXT("CustomMovementComponent"));
+	OurMovementComponent = CreateDefaultSubobject<UVoyagerFloatingMovement>(TEXT("CustomMovementComponent"));
 	OurMovementComponent->UpdatedComponent = RootComponent;
 
 	// Take control of the default player
@@ -76,7 +76,7 @@ void AVoyager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-UPawnMovementComponent* AVoyager::GetMovementComponent() const
+UFloatingPawnMovement* AVoyager::GetMovementComponent() const
 {
 	return OurMovementComponent;
 }

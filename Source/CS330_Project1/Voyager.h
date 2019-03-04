@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "VoyagerMovementComponent.h"
+#include "VoyagerFloatingMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Voyager.generated.h"
@@ -22,7 +23,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	class UVoyagerMovementComponent* OurMovementComponent;
+	class UVoyagerFloatingMovement* OurMovementComponent;
 	USpringArmComponent* SpringArm;
 	FVector2D CameraInput;
 public:	
@@ -32,7 +33,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual UPawnMovementComponent* GetMovementComponent() const override;
+	virtual UFloatingPawnMovement* GetMovementComponent() const override;
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
