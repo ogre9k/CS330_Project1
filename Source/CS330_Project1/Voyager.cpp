@@ -2,6 +2,7 @@
 
 #include "Voyager.h"
 #include "Engine.h"
+#include "Sun.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -13,7 +14,7 @@ AVoyager::AVoyager()
 	// Our root component will be a sphere that reacts to physics
 	USphereComponent* SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = SphereComponent;
-	SphereComponent->InitSphereRadius(40.0f);
+	SphereComponent->InitSphereRadius(80.0f);
 	SphereComponent->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Use a spring arm to give the camera smooth, natural-feeling motion.
@@ -30,6 +31,7 @@ AVoyager::AVoyager()
 	// Create an instance of our movement component, and tell it to update the root.
 	OurMovementComponent = CreateDefaultSubobject<UVoyagerFloatingMovement>(TEXT("CustomMovementComponent"));
 	OurMovementComponent->UpdatedComponent = RootComponent;
+	OurMovementComponent->MaxSpeed = 300;
 
 	// Take control of the default player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -39,7 +41,13 @@ AVoyager::AVoyager()
 void AVoyager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	FVector test = FVector(2340.0, -1360.0, 1460.0);
+	FVector spawnLocation = SpringArm->GetComponentLocation() + SpringArm->GetForwardVector() * FMath::RandRange(-500.0f, 500.0f) + SpringArm->GetRightVector() * FMath::RandRange(-500.0f, 500.0f)
+		+ SpringArm->GetUpVector() * FMath::RandRange(-500.0f, 500.0f);
+	if (GetWorld())
+	{
+		ASun *myNewActor = GetWorld()->SpawnActor<ASun>(test, GetActorRotation());
+	}
 }
 
 // Called every frame
