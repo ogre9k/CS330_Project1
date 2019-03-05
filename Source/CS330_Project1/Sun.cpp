@@ -29,6 +29,11 @@ ASun::ASun()
 
 	SphereVisual->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
 	SphereVisual->SetWorldScale3D(FVector(4.0f));
+
+	OurMovementComponent = CreateDefaultSubobject<UPlanetRotationMovement>(TEXT("CustomMovementComponent"));
+	OurMovementComponent->UpdatedComponent = RootComponent;
+	//OurMovementComponent->PivotTranslation = FVector(200, 300, 0); Sun just spins, but if it did orbit this is how we'd do it
+	
 }
 
 // Called when the game starts or when spawned

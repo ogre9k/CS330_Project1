@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PlanetRotationMovement.h"
 #include "Sun.generated.h"
 
 UCLASS()
@@ -18,7 +19,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	class UPlanetRotationMovement* OurMovementComponent;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

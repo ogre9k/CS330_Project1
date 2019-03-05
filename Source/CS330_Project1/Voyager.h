@@ -8,6 +8,7 @@
 #include "VoyagerFloatingMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Sun.h"
 #include "Voyager.generated.h"
 
 UCLASS()
@@ -26,6 +27,16 @@ protected:
 	class UVoyagerFloatingMovement* OurMovementComponent;
 	USpringArmComponent* SpringArm;
 	FVector2D CameraInput;
+	ASun *sun;
+
+	UPROPERTY(EditAnywhere)
+	float BearingTime;
+
+	float RotateFactor;
+	bool rotating;
+	// Variable that holds the initial direction to turn from
+	FVector initRotateDir;
+	FVector targetDir;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,5 +50,6 @@ public:
 	void MoveRight(float AxisValue);
 	void Turn(float AxisValue);
 	void TurnUp(float AxisValue);
+	void RightClick();
 
 };
