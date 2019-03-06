@@ -75,11 +75,12 @@ void AVoyager::Tick(float DeltaTime)
 		SpringArm->SetWorldRotation(NewRotation);
 
 		// Zoom!
+		// Move voyager halfway to Sun
 		FVector sunLocation = sun->GetActorLocation();
 		FVector distanceVector = sunLocation - initialLocation;
-		OurMovementComponent->AddInputVector(distanceVector / 2);
-
-		// Move voyager halfway to Sun
+		FVector NewLocation = FMath::Lerp(initialLocation, sunLocation, RotateFactor/2);
+		FVector vectorToNewLocation = NewLocation - GetActorLocation();
+		OurMovementComponent->AddInputVector(vectorToNewLocation);
 
 		// Check if camera is looking at the object
 		if (RotateFactor >= 1.0f)
