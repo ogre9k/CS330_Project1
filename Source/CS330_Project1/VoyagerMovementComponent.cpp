@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VoyagerMovementComponent.h"
+#include "Engine.h"
+#include "Voyager.h"
 
 void UVoyagerMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
@@ -12,8 +14,9 @@ void UVoyagerMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 		return;
 	}
 
+	AVoyager* Voyager = Cast<AVoyager>(GetOwner());
 	// Get (and then clear) the movement vector that we set in ACollidingPawn::Tick
-	FVector DesiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * DeltaTime * 150.0f;
+	FVector DesiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * DeltaTime * Voyager->GetSpeed();
 	if (!DesiredMovementThisFrame.IsNearlyZero())
 	{
 		FHitResult Hit;
@@ -22,6 +25,10 @@ void UVoyagerMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 		// If we bumped into something, try to slide along it
 		if (Hit.IsValidBlockingHit())
 		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Green, FString::Printf(TEXT("Avoided Collision with %s"), *Hit.GetActor()->GetActorLabel()));
+			}
 			SlideAlongSurface(DesiredMovementThisFrame, 1.f - Hit.Time, Hit.Normal, Hit);
 		}
 	}

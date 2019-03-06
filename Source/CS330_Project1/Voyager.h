@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "VoyagerMovementComponent.h"
-#include "VoyagerFloatingMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Sun.h"
@@ -24,13 +23,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	class UVoyagerFloatingMovement* OurMovementComponent;
+	class UVoyagerMovementComponent* OurMovementComponent;
 	USpringArmComponent* SpringArm;
 	FVector2D CameraInput;
 	ASun *sun;
 
 	UPROPERTY(EditAnywhere)
 	float BearingTime;
+	UPROPERTY(EditAnywhere)
+	float Speed;
 
 	float RotateFactor;
 	bool rotating;
@@ -44,12 +45,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual UFloatingPawnMovement* GetMovementComponent() const override;
+	virtual UPawnMovementComponent* GetMovementComponent() const override;
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 	void Turn(float AxisValue);
 	void TurnUp(float AxisValue);
 	void RightClick();
-
+	float GetSpeed();
 };

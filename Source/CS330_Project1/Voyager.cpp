@@ -12,10 +12,11 @@ AVoyager::AVoyager()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BearingTime = 2.0f;
+	Speed = 300.0f;
 	// Our root component will be a sphere that reacts to physics
 	USphereComponent* SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = SphereComponent;
-	SphereComponent->InitSphereRadius(80.0f);
+	SphereComponent->InitSphereRadius(40.0f);
 	SphereComponent->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Use a spring arm to give the camera smooth, natural-feeling motion.
@@ -30,9 +31,8 @@ AVoyager::AVoyager()
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 
 	// Create an instance of our movement component, and tell it to update the root.
-	OurMovementComponent = CreateDefaultSubobject<UVoyagerFloatingMovement>(TEXT("CustomMovementComponent"));
+	OurMovementComponent = CreateDefaultSubobject<UVoyagerMovementComponent>(TEXT("CustomMovementComponent"));
 	OurMovementComponent->UpdatedComponent = RootComponent;
-	OurMovementComponent->MaxSpeed = 300;
 
 	// Take control of the default player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -125,7 +125,7 @@ void AVoyager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-UFloatingPawnMovement* AVoyager::GetMovementComponent() const
+UPawnMovementComponent* AVoyager::GetMovementComponent() const
 {
 	return OurMovementComponent;
 }
@@ -163,4 +163,9 @@ void AVoyager::RightClick()
 	initRotateDir.Normalize();
 	targetDir = sun->GetActorLocation() - SpringArm->GetComponentLocation();
 	targetDir.Normalize();
+}
+
+float AVoyager::GetSpeed()
+{
+	return Speed;
 }

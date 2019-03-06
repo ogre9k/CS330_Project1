@@ -7,6 +7,7 @@
 // Sets default values
 ASun::ASun()
 {
+	//SetActorLabel("Jim");
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	// Create and position a mesh component so we can see where our sphere is

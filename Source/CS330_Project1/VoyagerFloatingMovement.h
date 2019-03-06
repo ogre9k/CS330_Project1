@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CS330_PROJECT1_API UVoyagerFloatingMovement : public UFloatingPawnMovement
+class CS330_PROJECT1_API UVoyagerFloatingMovement : public UPawnMovementComponent
 {
 	GENERATED_BODY()
 public:
