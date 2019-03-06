@@ -25,9 +25,10 @@ void UVoyagerMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 		// If we bumped into something, try to slide along it
 		if (Hit.IsValidBlockingHit())
 		{
+			ASun* planetHit = Cast<ASun>(Hit.GetActor());
 			if (GEngine)
 			{
-				GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Green, FString::Printf(TEXT("Avoided Collision with %s"), *Hit.GetActor()->GetActorLabel()));
+				GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Green, FString::Printf(TEXT("Avoided Collision with %s"), *planetHit->GetPlanetName()));
 			}
 			SlideAlongSurface(DesiredMovementThisFrame, 1.f - Hit.Time, Hit.Normal, Hit);
 		}

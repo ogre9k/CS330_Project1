@@ -3,15 +3,16 @@
 #include "Sun.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ASun::ASun()
 {
-	//SetActorLabel("Jim");
+	PlanetName = FString(TEXT("Sun"));
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	// Create and position a mesh component so we can see where our sphere is
-	UStaticMeshComponent* SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
+	SphereVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
 	RootComponent = SphereVisual;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>SphereVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
@@ -37,12 +38,21 @@ ASun::ASun()
 	
 }
 
+void ASun::SetParams(FString name, FVector scale, FVector rotation)
+{
+	PlanetName = name;
+	SphereVisual->SetWorldScale3D(scale);
+	OurMovementComponent->PivotTranslation = rotation;
+}
 // Called when the game starts or when spawned
 void ASun::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
+FString ASun::GetPlanetName()
+{
+	return PlanetName;
+}
 // Called every frame
 void ASun::Tick(float DeltaTime)
 {

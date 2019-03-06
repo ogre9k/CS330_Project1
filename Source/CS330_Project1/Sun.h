@@ -15,11 +15,14 @@ class CS330_PROJECT1_API ASun : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASun();
-
+	void SetParams(FString name, FVector scale, FVector rotation);
+	FString GetPlanetName();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	class UPlanetRotationMovement* OurMovementComponent;
+	UStaticMeshComponent* SphereVisual;
+	FString PlanetName;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

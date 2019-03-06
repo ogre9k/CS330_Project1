@@ -38,6 +38,7 @@ protected:
 	// Variable that holds the initial direction to turn from
 	FVector initRotateDir;
 	FVector targetDir;
+	FVector initialLocation;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

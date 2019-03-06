@@ -10,7 +10,6 @@ AVoyager::AVoyager()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	BearingTime = 2.0f;
 	Speed = 300.0f;
 	// Our root component will be a sphere that reacts to physics
@@ -42,10 +41,12 @@ AVoyager::AVoyager()
 void AVoyager::BeginPlay()
 {
 	Super::BeginPlay();
-	FVector test = FVector(2340.0, -1360.0, 1460.0);
+	FVector sunLocation = FVector(2340.0, -1360.0, 1460.0);
 	if (GetWorld())
 	{
-		sun = GetWorld()->SpawnActor<ASun>(test, GetActorRotation());
+		// Spawn the sun
+		sun = GetWorld()->SpawnActor<ASun>(sunLocation, GetActorRotation());
+		sun->SetParams(FString(TEXT("Sun")), FVector(4.0f), FVector(0.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -74,6 +75,10 @@ void AVoyager::Tick(float DeltaTime)
 		SpringArm->SetWorldRotation(NewRotation);
 
 		// Zoom!
+		FVector sunLocation = sun->GetActorLocation();
+		FVector distanceVector = sunLocation - initialLocation;
+		OurMovementComponent->AddInputVector(distanceVector / 2);
+
 		// Move voyager halfway to Sun
 
 		// Check if camera is looking at the object
@@ -89,6 +94,15 @@ void AVoyager::Tick(float DeltaTime)
 				if (myPlayerController != NULL)
 				{
 					this->EnableInput(myPlayerController);
+				}
+				if (GEngine)
+				{
+					float distX, distY, distZ;
+					distX = sun->GetActorLocation().X - GetActorLocation().X;
+					distY = sun->GetActorLocation().Y - GetActorLocation().Y;
+					distZ = sun->GetActorLocation().Z - GetActorLocation().Z;
+					float totalDistance = sqrt((distX*distX + distY * distY + distZ * distZ));
+					GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Bearing mode finished: Distance is : %f"), totalDistance));
 				}
 			}
 		}
@@ -163,6 +177,18 @@ void AVoyager::RightClick()
 	initRotateDir.Normalize();
 	targetDir = sun->GetActorLocation() - SpringArm->GetComponentLocation();
 	targetDir.Normalize();
+	initialLocation = GetActorLocation();
+
+	float distX, distY, distZ;
+	distX = sun->GetActorLocation().X - initialLocation.X;
+	distY = sun->GetActorLocation().Y - initialLocation.Y;
+	distZ = sun->GetActorLocation().Z - initialLocation.Z;
+	float totalDistance = sqrt((distX*distX + distY * distY + distZ * distZ));
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Bearing mode activated: Distance is : %f"), totalDistance));
+	}
 }
 
 float AVoyager::GetSpeed()
