@@ -35,6 +35,8 @@ AVoyager::AVoyager()
 
 	// Take control of the default player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+    
+    distanceFactor = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -49,9 +51,9 @@ void AVoyager::BeginPlay()
 		sun->SetParams(FString(TEXT("Sun")), FVector(4.0f), FVector(0.0f, 0.0f, 0.0f));
 		FVector sunOrigin, boundingBox;
 		sun->GetActorBounds(false, sunOrigin, boundingBox);
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("boundingBox: %f, %f, %f"), boundingBox.X, boundingBox.Y, boundingBox.Z));
 		sunRadius = boundingBox.Z / 2.0f;
 		sun->SetPivotOffset(FVector(sunOrigin.X, sunOrigin.Y, sunOrigin.Z + sunRadius));
+        planetNumber = 1;
 	}
 }
 
@@ -142,7 +144,7 @@ void AVoyager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	InputComponent->BindAxis("Turn", this, &AVoyager::Turn);
 	InputComponent->BindAxis("TurnUp", this, &AVoyager::TurnUp);
 	InputComponent->BindAction("RightClick", IE_Pressed, this, &AVoyager::RightClick);
-
+    InputComponent->BindAction("Spawner", IE_Pressed, this, &AVoyager::Spawner);
 }
 
 UPawnMovementComponent* AVoyager::GetMovementComponent() const
@@ -195,6 +197,77 @@ void AVoyager::RightClick()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Bearing mode activated: Distance is : %f"), totalDistance));
 	}
+}
+
+// Make this a for-loop, not a Switch statement.
+// Variables here are scale, planet name (if it matters), distance from the sun.
+// Other variables, that belong in the other class, are the texture that will be used.
+// This can be implemented in SetParams.
+void AVoyager::Spawner()
+{
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 6.f, FColor::Green, FString::Printf(TEXT("PlanetNumber: %d"), planetNumber));
+    }
+    switch(planetNumber)
+    {
+        case 1: // Scale = 0.5, Dist = 100
+        {
+            FVector offset = FVector(100.0f * distanceFactor, 0.0f, 0.0f);
+            planets[planetNumber - 1] = GetWorld()->SpawnActor<ASun>(sun->GetActorLocation() + offset, GetActorRotation());
+            planets[planetNumber - 1]->SetParams(FString(TEXT("Planet X")), FVector(0.5f), FVector(0.0f, 0.0f, 0.0f));
+            planets[planetNumber - 1]->GetActorBounds(false, planetOrigin, boundingBox);
+            radius = boundingBox.Z / 2.0f;
+            planets[planetNumber - 1]->SetPivotOffset(FVector(planetOrigin.X, planetOrigin.Y, planetOrigin.Z + radius));
+            planetNumber++;
+            break;
+        }
+        case 2: // Scale = 1, Dist = 150
+        {
+            planets[planetNumber - 1] = GetWorld()->SpawnActor<ASun>(sun->GetActorLocation(), GetActorRotation());
+            planets[planetNumber - 1]->SetParams(FString(TEXT("Planet X")), FVector(0.5f), FVector(0.0f, 0.0f, 0.0f));
+            planets[planetNumber - 1]->GetActorBounds(false, planetOrigin, boundingBox);
+            radius = boundingBox.Z / 2.0f;
+            planets[planetNumber - 1]->SetPivotOffset(FVector(planetOrigin.X, planetOrigin.Y, planetOrigin.Z + radius));
+            planetNumber++;
+            break;
+        }
+        case 3: // Scale = 1, Dist = 200
+        {
+            planets[planetNumber - 1] = GetWorld()->SpawnActor<ASun>(sun->GetActorLocation(), GetActorRotation());
+            planets[planetNumber - 1]->SetParams(FString(TEXT("Planet X")), FVector(0.5f), FVector(0.0f, 0.0f, 0.0f));
+            planets[planetNumber - 1]->GetActorBounds(false, planetOrigin, boundingBox);
+            radius = boundingBox.Z / 2.0f;
+            planets[planetNumber - 1]->SetPivotOffset(FVector(planetOrigin.X, planetOrigin.Y, planetOrigin.Z + radius));
+            planetNumber++;
+            break;
+        }
+        case 4: // Scale = 1, Dist = 300
+        {
+            planets[planetNumber - 1] = GetWorld()->SpawnActor<ASun>(sun->GetActorLocation(), GetActorRotation());
+            planets[planetNumber - 1]->SetParams(FString(TEXT("Planet X")), FVector(0.5f), FVector(0.0f, 0.0f, 0.0f));
+            planets[planetNumber - 1]->GetActorBounds(false, planetOrigin, boundingBox);
+            radius = boundingBox.Z / 2.0f;
+            planets[planetNumber - 1]->SetPivotOffset(FVector(planetOrigin.X, planetOrigin.Y, planetOrigin.Z + radius));
+            planetNumber++;
+            break;
+        }
+        case 5: // Scale = 2.5, Dist = 450
+            planetNumber++;
+            break;
+        case 6: // Scale = 2.5, Dist = 600
+            planetNumber++;
+            break;
+        case 7: // Scale = 1.5, Dist = 800
+            planetNumber++;
+            break;
+        case 8: // Scale = 1.5, Dist = 1000
+            planetNumber++;
+            break;
+        default:
+            // Do nothing
+            break;
+    }
 }
 
 float AVoyager::GetSpeed()

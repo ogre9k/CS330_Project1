@@ -30,7 +30,7 @@ ASun::ASun()
 	SphereVisual->SetupAttachment(RootComponent);
 
 	SphereVisual->SetRelativeLocation(FVector(0.0f, 0.0f, -40.0f));
-	SphereVisual->SetWorldScale3D(FVector(4.0f));
+	// SphereVisual->SetWorldScale3D(FVector(4.0f));
 
 	OurMovementComponent = CreateDefaultSubobject<UPlanetRotationMovement>(TEXT("CustomMovementComponent"));
 	OurMovementComponent->UpdatedComponent = RootComponent;

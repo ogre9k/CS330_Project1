@@ -26,7 +26,8 @@ protected:
 	class UVoyagerMovementComponent* OurMovementComponent;
 	USpringArmComponent* SpringArm;
 	FVector2D CameraInput;
-	ASun *sun;
+    ASun *sun;
+    ASun *planets[8];
 
 	UPROPERTY(EditAnywhere)
 	float BearingTime;
@@ -53,6 +54,9 @@ public:
 	void Turn(float AxisValue);
 	void TurnUp(float AxisValue);
 	void RightClick();
+    void Spawner();
 	float GetSpeed();
-	float sunRadius;
+    float sunRadius, radius, distanceFactor;
+    FVector planetOrigin, boundingBox;
+    int planetNumber;
 };
