@@ -47,6 +47,11 @@ void AVoyager::BeginPlay()
 		// Spawn the sun
 		sun = GetWorld()->SpawnActor<ASun>(sunLocation, GetActorRotation());
 		sun->SetParams(FString(TEXT("Sun")), FVector(4.0f), FVector(0.0f, 0.0f, 0.0f));
+		FVector sunOrigin, boundingBox;
+		sun->GetActorBounds(false, sunOrigin, boundingBox);
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("boundingBox: %f, %f, %f"), boundingBox.X, boundingBox.Y, boundingBox.Z));
+		sunRadius = boundingBox.Z / 2.0f;
+		sun->SetPivotOffset(FVector(sunOrigin.X, sunOrigin.Y, sunOrigin.Z + sunRadius));
 	}
 }
 
@@ -101,7 +106,7 @@ void AVoyager::Tick(float DeltaTime)
 					float distX, distY, distZ;
 					distX = sun->GetActorLocation().X - GetActorLocation().X;
 					distY = sun->GetActorLocation().Y - GetActorLocation().Y;
-					distZ = sun->GetActorLocation().Z - GetActorLocation().Z;
+					distZ = sun->GetActorLocation().Z + - GetActorLocation().Z;
 					float totalDistance = sqrt((distX*distX + distY * distY + distZ * distZ));
 					GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Bearing mode finished: Distance is : %f"), totalDistance));
 				}
@@ -176,7 +181,7 @@ void AVoyager::RightClick()
 	rotating = true;
 	initRotateDir = SpringArm->GetForwardVector();
 	initRotateDir.Normalize();
-	targetDir = sun->GetActorLocation() - SpringArm->GetComponentLocation();
+	targetDir = sun->GetPivotOffset() - SpringArm->GetComponentLocation();
 	targetDir.Normalize();
 	initialLocation = GetActorLocation();
 

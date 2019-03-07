@@ -54,4 +54,5 @@ public:
 	void TurnUp(float AxisValue);
 	void RightClick();
 	float GetSpeed();
+	float sunRadius;
 };
