@@ -4,6 +4,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ASun::ASun()
@@ -44,15 +45,39 @@ void ASun::SetParams(FString name, FVector scale, FVector rotation)
 	SphereVisual->SetWorldScale3D(scale);
 	OurMovementComponent->PivotTranslation = rotation;
 }
+
 // Called when the game starts or when spawned
 void ASun::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
 FString ASun::GetPlanetName()
 {
 	return PlanetName;
 }
+
+FBoxSphereBounds ASun::GetBounds()
+{
+	FTransform temp;
+	return SphereVisual->CalcBounds(temp);
+}
+
+void ASun::Ignite()
+{
+	/*
+	OurParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MovementParticles"));
+	OurParticleSystem->SetupAttachment(SphereVisual);
+	OurParticleSystem->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleAsset(TEXT("/Game/StarterContent/Particles/P_Fire.P_Fire"));
+
+	if (ParticleAsset.Succeeded())
+	{
+		OurParticleSystem->SetTemplate(ParticleAsset.Object);
+	}
+	*/
+}
+
 // Called every frame
 void ASun::Tick(float DeltaTime)
 {
