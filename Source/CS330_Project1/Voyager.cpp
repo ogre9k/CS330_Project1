@@ -36,7 +36,9 @@ AVoyager::AVoyager()
 	// Take control of the default player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
     
-	distanceFactor = 5.0f;
+	distanceFactor = 10.0f;
+
+	planetNumber = 0;
 }
 
 // Called when the game starts or when spawned
@@ -48,12 +50,11 @@ void AVoyager::BeginPlay()
 	{
 		// Spawn the sun
 		sun = GetWorld()->SpawnActor<ASun>(sunLocation, GetActorRotation());
-		sun->SetParams(FString(TEXT("Sun")), FVector(4.0f), FVector(0.0f, 0.0f, 0.0f));
+		sun->SetParams(FString(TEXT("Sun")), FVector(4.0f), FVector(0.0f, 0.0f, 0.0f), 1.0f);
 		FBoxSphereBounds sunBounds = sun->GetBounds();
 		float sunRadius = sunBounds.SphereRadius * 4.0f;
 		sun->SetPivotOffset(FVector(sunLocation.X, sunLocation.Y, sunLocation.Z + sunRadius));
-		sun->Ignite();
-        planetNumber = 1;
+		planetNumber++;
 	}
 }
 
@@ -207,10 +208,11 @@ void AVoyager::Spawner()
 {
 	if (planetNumber <= 8)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("%s was created!"), *planetName[planetNumber - 1]));
 		FVector pivotTranslation = FVector(relativeDistance[planetNumber - 1] * distanceFactor, 0.0f, 0.0f);
 		FVector planetOrigin = FVector((sun->GetPivotOffset().X - pivotTranslation.X), sun->GetPivotOffset().Y, sun->GetPivotOffset().Z);
 		planets[planetNumber - 1] = GetWorld()->SpawnActor<ASun>(planetOrigin, GetActorRotation());
-		planets[planetNumber - 1]->SetParams(FString(TEXT("Planet")), FVector(scales[planetNumber - 1]), pivotTranslation);
+		planets[planetNumber - 1]->SetParams(FString(TEXT("Planet")), FVector(scales[planetNumber - 1]), pivotTranslation, rotationsModifier[planetNumber - 1]);
 		planetNumber++;
 	}
 }

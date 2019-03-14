@@ -3,7 +3,6 @@
 	"EngineAssociation": "4.21",
 	"Category": "",
 	"Description": "",
-	"Enterprise": false,
 	"Modules": [
 		{
 			"Name": "CS330_Project1",

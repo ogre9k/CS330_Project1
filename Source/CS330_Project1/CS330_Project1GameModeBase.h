@@ -13,5 +13,4 @@ UCLASS()
 class CS330_PROJECT1_API ACS330_Project1GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
 };

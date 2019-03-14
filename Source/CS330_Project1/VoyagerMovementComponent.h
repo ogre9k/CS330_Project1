@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PawnMovementComponent.h"
-#include "Voyager.h"
 #include "VoyagerMovementComponent.generated.h"
 
 /**

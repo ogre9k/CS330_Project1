@@ -28,6 +28,7 @@ protected:
 	FVector2D CameraInput;
     ASun *sun;
     ASun *planets[8];
+	FString planetName[8] = { "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune" };
 
 	UPROPERTY(EditAnywhere)
 	float BearingTime;
@@ -57,7 +58,9 @@ public:
     void Spawner();
 	float GetSpeed();
     float distanceFactor;
+	int planetNumber;
+
 	float scales[8] = { 0.5f, 1.0f, 1.0f, 1.0f, 2.5f, 2.5f, 1.5f, 2.5f };
 	float relativeDistance[8] = { 100.0f, 150.0f, 200.0f, 300.0f, 450.0f, 600.0f, 800.0f, 1000.0f };
-    int planetNumber;
+	float rotationsModifier[8] = { 0.25f, 0.75f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 4.0f };
 };
